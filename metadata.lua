@@ -1,5 +1,5 @@
 return {
-	version = '2.2b MOBILE',
+	version = '2.2b MOBILE v2',
 	updated = '5/13/23',
-	message = 'MOBILE SUPPORT ADDED! (configs and themes tabs are broken, im working on fixing them)'
+	message = 'fixed config and theme tabs'
 }
