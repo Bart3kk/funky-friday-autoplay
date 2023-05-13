@@ -1,3 +1,6 @@
+print("Credits to ShowerHead-FluxTeam for the port")
+print("Credits to mstudio45 for the ported UI library")
+
 local start = tick()
 local client = game:GetService('Players').LocalPlayer;
 local set_identity = (type(syn) == 'table' and syn.set_thread_identity) or setidentity or setthreadcontext
@@ -87,7 +90,7 @@ if type(getinfo) ~= 'function' then
     end
 end
 
-local UI = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/main/TestMobileSupport.lua")
+local UI = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/TestMobileSupport.lua")
 local themeManager = urlLoad("https://raw.githubusercontent.com/wally-rblx/LinoriaLib/main/addons/ThemeManager.lua")
 
 local metadata = urlLoad("https://raw.githubusercontent.com/bart3kk/funky-friday-autoplay/main/metadata.lua")
@@ -719,6 +722,8 @@ Groups.Credits = Tabs.Miscellaneous:AddRightGroupbox('Credits')
     addRichText(Groups.Credits:AddLabel('<font color="#3da5ff">wally</font> - script'))
     addRichText(Groups.Credits:AddLabel('<font color="#de6cff">Sezei</font> - contributor'))
     Groups.Credits:AddLabel('Inori - ui library')
+    Groups.Credits:AddLabel('mstudio45 - ported ui library')
+    Groups.Credits:AddLabel('ShowerHead-FluxTeam - port of the script')
     Groups.Credits:AddLabel('Jan - old ui library')
 
 
