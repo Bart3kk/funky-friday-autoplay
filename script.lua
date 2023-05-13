@@ -47,8 +47,8 @@ end
 -- attempt to block imcompatible exploits
 -- rewrote because old checks literally did not work
 if type(set_identity) ~= 'function' then return fail('Unsupported exploit (missing "set_thread_identity")') end
-if type(getconnections) ~= 'function' then return fail('You are running an outdated version of Fluxus Android. Uninstall Fluxus And Roblox and then please reinstall from www.fluxteam.net!') end
-if type(getloadedmodules) ~= 'function' then return fail('You are running an outdated version of Fluxus Android. Uninstall Fluxus And Roblox and then please reinstall from www.fluxteam.net!') end
+if type(getconnections) ~= 'function' then return fail('Unsupported exploit (missing "getconnections")') end
+if type(getloadedmodules) ~= 'function' then return fail('Unsupported exploit (misssing "getloadedmodules")') end
 if type(getgc) ~= 'function' then   return fail('Unsupported exploit (misssing "getgc")') end
 
 local getinfo = debug.getinfo or getinfo;
@@ -97,7 +97,7 @@ end
 local UI = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/TestMobileSupport.lua")
 local themeManager = urlLoad("https://raw.githubusercontent.com/wally-rblx/LinoriaLib/main/addons/ThemeManager.lua")
 
-local metadata = urlLoad("https://raw.githubusercontent.com/wally-rblx/funky-friday-autoplay/main/metadata.lua")
+local metadata = urlLoad("https://raw.githubusercontent.com/bart3kk/funky-friday-autoplay/main/metadata.lua")
 local httpService = game:GetService('HttpService')
 
 local framework, scrollHandler, network
@@ -445,6 +445,44 @@ do
     end)
 end
 
+-- Auto ring collector
+do
+    local thread = task.spawn(function()
+        local map = workspace:waitForChild('Map', 5)
+        local buildings = map and map:waitForChild('FunctionalBuildings', 5)
+        local spawners = buildings and buildings:waitForChild('RingSpawners', 5)
+
+        if spawners == nil then return end
+        if type(firetouchinterest) ~= 'function' then return end 
+
+        while true do
+            task.wait()
+            if Toggles.AutoClaimRings and Toggles.AutoClaimRings.Value then
+                local character = client.Character
+                local rootPart = character and character:findFirstChild('HumanoidRootPart')
+
+                if rootPart == nil then continue end
+
+                for i, spawner in next, spawners:GetChildren() do
+                    for _, ring in next, spawner:GetChildren() do
+                        if ring.Name ~= 'GoldenRing' then continue end
+
+                        local ring = ring:findFirstChild('ring')
+                        if not (ring and ring:IsA('BasePart')) then continue end
+                        if ring.Transparency == 1 then continue end
+
+                        firetouchinterest(ring, rootPart, 0)
+                        firetouchinterest(ring, rootPart, 1)
+                    end
+                end
+            end
+        end
+    end)
+    table.insert(shared.callbacks, function()
+        pcall(task.cancel, thread)
+    end)
+end
+
 local SaveManager = {} do
     SaveManager.Ignore = {}
     SaveManager.Parser = {
@@ -669,8 +707,9 @@ Groups.HitTiming = Tabs.Main:AddLeftGroupbox('Hit timing')
     Groups.HitTiming:AddSlider('HeldDelayMin',   { Text = 'Min held note delay', Min = 0, Max = 100, Default = 0,   Rounding = 0, Compact = true, Suffix = 'ms' })
     Groups.HitTiming:AddSlider('HeldDelayMax',   { Text = 'Max held note delay', Min = 0, Max = 500, Default = 20,  Rounding = 0, Compact = true, Suffix = 'ms' })
 
-Groups.Unlockables = Tabs.Main:AddRightGroupbox('Unlockables')
-    Groups.Unlockables:AddButton('Unlock developer notes', ActivateUnlockables)
+Groups.Misc = Tabs.Main:AddRightGroupbox('Misc')
+    Groups.Misc:AddButton('Unlock developer notes', ActivateUnlockables)
+    Groups.Misc:AddToggle('AutoClaimRings', { Text = 'Auto claim rings' })
 
 Groups.Keybinds = Tabs.Main:AddRightGroupbox('Keybinds')
     Groups.Keybinds:AddLabel('Sick'):AddKeyPicker('SickBind', { Default = 'One', NoUI = true })
@@ -680,9 +719,16 @@ Groups.Keybinds = Tabs.Main:AddRightGroupbox('Keybinds')
 
 Groups.Configs = Tabs.Miscellaneous:AddRightGroupbox('Configs')
 Groups.Credits = Tabs.Miscellaneous:AddRightGroupbox('Credits')
-    Groups.Credits:AddLabel('<font color="#3da5ff">wally</font> - script')
-    Groups.Credits:AddLabel('<font color="#de6cff">Sezei</font> - contributor')
-    Groups.Credits:AddLabel('Inori - ui library')
+    local function addRichText(label)
+        label.TextLabel.RichText = true
+    end
+
+    addRichText(Groups.Credits:AddLabel('<font color="#3da5ff">wally</font> - script'))
+    addRichText(Groups.Credits:AddLabel('<font color="#de6cff">Sezei</font> - contributor'))
+    addRichText(Groups.Credits:AddLabel('<font color="#3da5ff">Bart3kk</font> - fixing port'))
+    addRichText(Groups.Credits:AddLabel('<font color="#de6cff">mstudio45</font> - ported ui library'))
+    Groups.Credits:AddLabel('ShowerHead-FluxTeam - port of the')
+    Groups.Credits:AddLabel('official script')
     Groups.Credits:AddLabel('Jan - old ui library')
 
 
@@ -701,11 +747,12 @@ Groups.Misc = Tabs.Miscellaneous:AddRightGroupbox('Miscellaneous')
 
     UI.ToggleKeybind = Options.MenuToggle
 
-if type(readfile) == 'function' and type(writefile) == 'function' and type(makefolder) == 'function' and type(isfolder) == 'function' then
+
+if readfile and writefile and makefolder and isfolder then
     makefolder('funky_friday_autoplayer')
     makefolder('funky_friday_autoplayer\\configs')
 
-    Groups.Configs:AddDropdown('ConfigList', { Text = 'Config list', Values = {} })
+    Groups.Configs:AddDropdown('ConfigList', { Text = 'Config list', Values = {}, AllowNull = true })
     Groups.Configs:AddInput('ConfigName',    { Text = 'Config name' })
 
     Groups.Configs:AddDivider()
