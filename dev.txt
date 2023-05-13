@@ -96,7 +96,7 @@ end
 
 local UI = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/TestMobileSupport.lua")
 local ThemeManager = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/addons/ThemeManager.lua")
-local SaveManager = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/addons/SaveManager.lua
+local SaveManager = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/addons/SaveManager.lua")
 
 local metadata = urlLoad("https://raw.githubusercontent.com/wally-rblx/funky-friday-autoplay/main/metadata.lua")
 local httpService = game:GetService('HttpService')
