@@ -1,6 +1,6 @@
 local start = tick()
 local client = game:GetService('Players').LocalPlayer;
-local set_identity = (type(syn) == 'table' and syn.set_thread_identity) or setidentity or setthreadcontext
+local set_identity = (syn and syn.set_thread_identity) or setidentity or setthreadcontext
 local executor = identifyexecutor and identifyexecutor() or 'Unknown'
 
 local DevicePlatform = Enum.Platform.None;
