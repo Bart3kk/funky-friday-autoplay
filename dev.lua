@@ -91,7 +91,7 @@ local Repository = 'https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/'
 
 local IsMobile = false;
 local DevicePlatform = Enum.Platform.None;
-pcall(function() DevicePlatform = UserInputService:GetPlatform(); end);
+pcall(function() DevicePlatform = game:GetService("UserInputService"):GetPlatform(); end);
 IsMobile = (DevicePlatform == Enum.Platform.Android or DevicePlatform == Enum.Platform.IOS);
 
 local UI = nil
