@@ -1,20 +1,7 @@
 local start = tick()
 local client = game:GetService('Players').LocalPlayer;
-local set_identity = (syn and syn.set_thread_identity) or setidentity or setthreadcontext
+local set_identity = (type(syn) == 'table' and syn.set_thread_identity) or setidentity or setthreadcontext
 local executor = identifyexecutor and identifyexecutor() or 'Unknown'
-
-local DevicePlatform = Enum.Platform.None;
-pcall(function() DevicePlatform == UserInputService:GetPlatform(); end);
-
-local Library = nil
-if DevicePlatform == Enum.Platform.Android or DevicePlatform == Enum.Platform.IOS then
-	Library = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/TestMobileSupport.lua")
-else
-	Library = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/Library.lua")
-end
-
-local themeManager = urlLoad("https://raw.githubusercontent.com/Bart3kk/LinLib/main/ThemeManager.lua?token=GHSAT0AAAAAACCTMAATV6J2NRTTGX6GPLHCZDA2YZQ")
-local SaveManager = urlLoad("https://raw.githubusercontent.com/Bart3kk/LinLib/main/SaveManager.lua?token=GHSAT0AAAAAACCTMAATHOVPV3R7T53U74BKZDA2U6A")
 
 local function fail(r) return client:Kick(r) end
 
@@ -99,6 +86,20 @@ if type(getinfo) ~= 'function' then
         }
     end
 end
+
+local IsMobile = false;
+local DevicePlatform = Enum.Platform.None;
+pcall(function() DevicePlatform = UserInputService:GetPlatform(); end);
+IsMobile = (DevicePlatform == Enum.Platform.Android or DevicePlatform == Enum.Platform.IOS);
+
+local Library = nil
+if IsMobile then
+    Library = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/TestMobileSupport.lua")
+else
+    Library = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/Library.lua")
+end
+
+local themeManager = loadstring(game:HttpGet(Repository .. 'addons/ThemeManager.lua'))()
 
 local metadata = urlLoad("https://raw.githubusercontent.com/Bart3kk/funky-friday-autoplay/main/metadata.lua")
 local httpService = game:GetService('HttpService')
