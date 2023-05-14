@@ -94,10 +94,23 @@ if type(getinfo) ~= 'function' then
     end
 end
 
-local UI = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/TestMobileSupport.lua")
+local Repository = 'https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/'
+
+local IsMobile = false;
+local DevicePlatform = Enum.Platform.None;
+pcall(function() DevicePlatform = game:GetService("UserInputService"):GetPlatform(); end);
+IsMobile = (DevicePlatform == Enum.Platform.Android or DevicePlatform == Enum.Platform.IOS);
+
+local UI = nil
+if IsMobile then
+    UI = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/TestMobileSupport.lua")
+else
+    UI = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/Library.lua")
+end
+
 local themeManager = urlLoad("https://raw.githubusercontent.com/wally-rblx/LinoriaLib/main/addons/ThemeManager.lua")
 
-local metadata = urlLoad("https://raw.githubusercontent.com/bart3kk/funky-friday-autoplay/main/metadata.lua")
+local metadata = urlLoad("https://raw.githubusercontent.com/wally-rblx/funky-friday-autoplay/main/metadata.lua")
 local httpService = game:GetService('HttpService')
 
 local framework, scrollHandler, network
@@ -725,10 +738,7 @@ Groups.Credits = Tabs.Miscellaneous:AddRightGroupbox('Credits')
 
     addRichText(Groups.Credits:AddLabel('<font color="#3da5ff">wally</font> - script'))
     addRichText(Groups.Credits:AddLabel('<font color="#de6cff">Sezei</font> - contributor'))
-    addRichText(Groups.Credits:AddLabel('<font color="#3da5ff">Bart3kk</font> - fixing port'))
-    addRichText(Groups.Credits:AddLabel('<font color="#de6cff">mstudio45</font> - ported ui library'))
-    Groups.Credits:AddLabel('ShowerHead-FluxTeam - port of the')
-    Groups.Credits:AddLabel('official script')
+    Groups.Credits:AddLabel('Inori - ui library')
     Groups.Credits:AddLabel('Jan - old ui library')
 
 
@@ -747,8 +757,7 @@ Groups.Misc = Tabs.Miscellaneous:AddRightGroupbox('Miscellaneous')
 
     UI.ToggleKeybind = Options.MenuToggle
 
-
-if readfile and writefile and makefolder and isfolder then
+if type(readfile) == 'function' and type(writefile) == 'function' and type(makefolder) == 'function' and type(isfolder) == 'function' then
     makefolder('funky_friday_autoplayer')
     makefolder('funky_friday_autoplayer\\configs')
 
