@@ -99,7 +99,7 @@ else
     Library = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/Library.lua")
 end
 
-local ThemeManager = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/addons/ThemeManager.lua")
+local ThemeManager = urlLoad("https://raw.githubusercontent.com/wally-rblx/LinoriaLib/main/addons/ThemeManager.lua")
 
 local metadata = urlLoad("https://raw.githubusercontent.com/Bart3kk/funky-friday-autoplay/main/metadata.lua")
 local httpService = game:GetService('HttpService')
@@ -646,7 +646,7 @@ end
 -- Themes
 do
     local latestThemeIndex = 0
-    for i, theme in next, themeManager.BuiltInThemes do
+    for i, theme in next, ThemeManager.BuiltInThemes do
         if theme[1] > latestThemeIndex then
             latestThemeIndex = theme[1]
         end
@@ -654,17 +654,17 @@ do
 
     latestThemeIndex = latestThemeIndex + 1
 
-    local linoriaTheme = themeManager.BuiltInThemes.Default[2]
-    local funkyFridayTheme = table.clone(themeManager.BuiltInThemes.Default[2])
+    local linoriaTheme = ThemeManager.BuiltInThemes.Default[2]
+    local funkyFridayTheme = table.clone(ThemeManager.BuiltInThemes.Default[2])
 
     funkyFridayTheme.AccentColor = Color3.fromRGB(255, 65, 65):ToHex()
 
-    themeManager.BuiltInThemes['Linoria'] = { latestThemeIndex, linoriaTheme }
-    themeManager.BuiltInThemes['Default'] = { 1, funkyFridayTheme }
+    ThemeManager.BuiltInThemes['Linoria'] = { latestThemeIndex, linoriaTheme }
+    ThemeManager.BuiltInThemes['Default'] = { 1, funkyFridayTheme }
 
-    themeManager:SetLibrary(UI)
-    themeManager:SetFolder('funky_friday_autoplayer')
-    themeManager:ApplyToGroupbox(Tabs.Miscellaneous:AddLeftGroupbox('Themes'))
+    ThemeManager:SetLibrary(UI)
+    ThemeManager:SetFolder('funky_friday_autoplayer')
+    ThemeManager:ApplyToGroupbox(Tabs.Miscellaneous:AddLeftGroupbox('Themes'))
 
     SaveManager:SetIgnoreIndexes({ 
         "BackgroundColor", "MainColor", "AccentColor", "OutlineColor", "FontColor", -- themes
