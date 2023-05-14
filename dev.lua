@@ -99,7 +99,7 @@ else
     Library = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/Library.lua")
 end
 
-local themeManager = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/addons/ThemeManager.lua")
+local ThemeManager = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/addons/ThemeManager.lua")
 
 local metadata = urlLoad("https://raw.githubusercontent.com/Bart3kk/funky-friday-autoplay/main/metadata.lua")
 local httpService = game:GetService('HttpService')
