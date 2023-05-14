@@ -87,10 +87,6 @@ if type(getinfo) ~= 'function' then
     end
 end
 
-local Repo = 'https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/'
-local OGRepo = 'https://raw.githubusercontent.com/wally-rblx/LinoriaLib/main/'
-local MobileRepo = 'https://raw.githubusercontent.com/bart3kk/funky-friday-autoplay/main/'
-
 local IsMobile = false;
 local DevicePlatform = Enum.Platform.None;
 pcall(function() DevicePlatform == UserInputService:GetPlatform(); end);
@@ -98,15 +94,15 @@ IsMobile == (DevicePlatform == Enum.Platform.Android or DevicePlatform == Enum.P
 
 local Library = nil
 if IsMobile then
-    Library = loadstring(game:HttpGet(Repo .. 'TestMobileSupport.lua'))()
+    Library = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/TestMobileSupport.lua")
 else
-    Library = loadstring(game:HttpGet(Repo .. 'Library.lua'))()
+    Library = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/Library.lua")
 end
 
-local themeManager = loadstring(game:HttpGet(OGRepo .. 'addons/ThemeManager.lua'))()
-local SaveManager = loadstring(game:HttpGet(Repo .. 'addons/SaveManager.lua'))()
+local themeManager = urlLoad("https://raw.githubusercontent.com/Bart3kk/LinLib/main/ThemeManager.lua?token=GHSAT0AAAAAACCTMAATV6J2NRTTGX6GPLHCZDA2YZQ")
+local SaveManager = urlLoad("https://raw.githubusercontent.com/Bart3kk/LinLib/main/SaveManager.lua?token=GHSAT0AAAAAACCTMAATHOVPV3R7T53U74BKZDA2U6A")
 
-local metadata = loadstring(game:HttpGet(MobileRepo .. 'metadata.lua'))()
+local metadata = urlLoad("https://raw.githubusercontent.com/Bart3kk/funky-friday-autoplay/main/metadata.lua")
 local httpService = game:GetService('HttpService')
 
 local framework, scrollHandler, network
