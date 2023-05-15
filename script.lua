@@ -5,6 +5,13 @@ print("I DO NOT OWN ANY OF THIS CODE. CREDITS TO THIS CODE AND UI LIBS ETC GO TO
 print(" ")
 print("Wally RBLX's Funky Friday AutoPlay script mobile port. (READ LINES ABOVE!)")
 
+print("Credits to ShowerHead-FluxTeam for the ported version of Wally-RBLX's Funky Friday AutoPlay script")
+print("Credits to mstudio45 for the ported UI lib of Linoria")
+print("Credits to Wally-RBLX and his devs for making this amazing script")
+print("I DO NOT OWN ANY OF THIS CODE. CREDITS TO THIS CODE AND UI LIBS ETC GO TO THEIR OWNERS.")
+print(" ")
+print("Wally RBLX's Funky Friday AutoPlay script mobile port. (READ LINES ABOVE!)")
+
 local start = tick()
 local client = game:GetService('Players').LocalPlayer;
 local set_identity = (type(syn) == 'table' and syn.set_thread_identity) or setidentity or setthreadcontext
@@ -738,6 +745,8 @@ Groups.Credits = Tabs.Miscellaneous:AddRightGroupbox('Credits')
 
     addRichText(Groups.Credits:AddLabel('<font color="#3da5ff">wally</font> - script'))
     addRichText(Groups.Credits:AddLabel('<font color="#de6cff">Sezei</font> - contributor'))
+    addRichText(Gropus.Credits:AddLabel('<font color="#3da5ff">Bart3kk</font> - making a universal port'))
+    addRichText(Groups.Credits:AddLabel('<font color="#de6cff">mstudio45</font> - ported UI lib, UI loader'))
     Groups.Credits:AddLabel('Inori - ui library')
     Groups.Credits:AddLabel('Jan - old ui library')
 
