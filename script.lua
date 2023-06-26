@@ -94,23 +94,21 @@ if type(getinfo) ~= 'function' then
     end
 end
 
-local Repository = 'https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/'
-
 local IsMobile = false;
 local DevicePlatform = Enum.Platform.None;
-pcall(function() DevicePlatform = game:GetService("UserInputService"):GetPlatform(); end);
+pcall(function() DevicePlatform = UserInputService:GetPlatform(); end);
 IsMobile = (DevicePlatform == Enum.Platform.Android or DevicePlatform == Enum.Platform.IOS);
+local UIRepo = 'https://raw.githubusercontent.com/Bart3kk/LinLib/main/'
+local ScriptRepo = 'https://raw.githubusercontent.com/Bart3kk/funky-friday-autoplay/main/'
 
 local UI = nil
 if IsMobile then
-    UI = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/TestMobileSupport.lua")
+    UI = loadstring(game:HttpGet(UIRepo .. 'TestMobileSupport.lua'))()
 else
-    UI = urlLoad("https://raw.githubusercontent.com/mstudio45/LinoriaLib/dev/Library.lua")
+    UI = loadstring(game:HttpGet(UIRepo .. 'Library.lua'))()
 end
 
-local themeManager = urlLoad("https://raw.githubusercontent.com/wally-rblx/LinoriaLib/main/addons/ThemeManager.lua")
-
-local metadata = urlLoad("https://raw.githubusercontent.com/wally-rblx/funky-friday-autoplay/main/metadata.lua")
+local metadata = loadstring(game:HttpGet(ScriptRepo .. 'metadata.lua'))()
 local httpService = game:GetService('HttpService')
 
 local framework, scrollHandler, network
@@ -321,16 +319,15 @@ local chanceValues do
                     hitboxOffset = hitboxOffset / 1000
                 end
 
-                local songTime = framework.SongPlayer.CurrentTime 
+                local songTime = framework.SongPlayer.CurrentTime
+                local playbackSpeed = 1
                 do
                     local configs = framework.SongPlayer.CurrentSongConfigs
-                    local playbackSpeed = type(configs) == 'table' and configs.PlaybackSpeed
-
-                    if type(playbackSpeed) ~= 'number' then
-                        playbackSpeed = 1
+                    if type(configs) == 'table' and type(rawget(configs, "PlaybackSpeed")) == "number" then
+                        playbackSpeed = configs.PlaybackSpeed
                     end
 
-                    songTime = songTime /  playbackSpeed
+                    songTime = songTime / playbackSpeed
                 end
 
                 local noteTime = math.clamp((1 - math.abs(arrow.Data.Time - (songTime + hitboxOffset))) * 100, 0, 100)
@@ -348,6 +345,8 @@ local chanceValues do
 
                         local arrowLength = arrow.Data.Length or 0
                         local isHeld = arrowLength > 0
+                                
+                        if isHeld then arrowLength = arrowLength / playbackSpeed end
 
                         local delayMode = Options.DelayMode.Value
 
@@ -738,8 +737,6 @@ Groups.Credits = Tabs.Miscellaneous:AddRightGroupbox('Credits')
 
     addRichText(Groups.Credits:AddLabel('<font color="#3da5ff">wally</font> - script'))
     addRichText(Groups.Credits:AddLabel('<font color="#de6cff">Sezei</font> - contributor'))
-    addRichText(Gropus.Credits:AddLabel('<font color="#3da5ff">Bart3kk</font> - making a universal port'))
-    addRichText(Groups.Credits:AddLabel('<font color="#de6cff">mstudio45</font> - ported UI lib, UI loader'))
     Groups.Credits:AddLabel('Inori - ui library')
     Groups.Credits:AddLabel('Jan - old ui library')
 
