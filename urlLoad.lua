@@ -1,4 +1,4 @@
-local function urlLoad(url)
+function urlLoad(url)
     local success, result
 
     if shared.__urlcache[url] then
