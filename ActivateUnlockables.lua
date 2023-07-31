@@ -1,4 +1,4 @@
-local ActivateUnlockables do
+do
     -- Note: I know you can do this with UserId but it only works if you run it before opening the notes menu
     -- My script should work no matter the order of which you run things :)
 
