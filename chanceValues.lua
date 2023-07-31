@@ -1,4 +1,4 @@
-local chanceValues do
+do
     chanceValues = { 
         Sick = 96,
         Good = 92,
