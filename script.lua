@@ -93,19 +93,9 @@ if type(getinfo) ~= 'function' then
     end
 end
 
-local IsMobile = false;
-local DevicePlatform = Enum.Platform.None;
-pcall(function() DevicePlatform = UserInputService:GetPlatform(); end);
-IsMobile = (DevicePlatform == Enum.Platform.Android or DevicePlatform == Enum.Platform.IOS);
 local UIRepo = 'https://raw.githubusercontent.com/Bart3kk/LinLib/main/'
 local ScriptRepo = 'https://raw.githubusercontent.com/Bart3kk/funky-friday-autoplay/main/'
-
-local UI = nil
-if IsMobile then
-    UI = loadstring(game:HttpGet(UIRepo .. 'TestMobileSupport.lua'))()
-else
-    UI = loadstring(game:HttpGet(UIRepo .. 'Library.lua'))()
-end
+local UI = loadstring(game:HttpGet(UIRepo .. 'TestMobileSupport.lua'))()
 
 local metadata = loadstring(game:HttpGet(ScriptRepo .. 'metadata.lua'))()
 local httpService = game:GetService('HttpService')
