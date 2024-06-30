@@ -985,10 +985,11 @@ Groups.Credits = Tabs.Miscellaneous:AddRightGroupbox('Credits')
     end
 
     addRichText(Groups.Credits:AddLabel('<font color="#3da5ff">wally</font> - script'))
+    addRichText(Groups.Credits:AddLabel('<font color="#ff00ff">Bart3kk</font> - mobile port'))
     addRichText(Groups.Credits:AddLabel('<font color="#de6cff">Sezei</font> - contributor'))
     Groups.Credits:AddLabel('Inori - ui library')
     Groups.Credits:AddLabel('Jan - old ui library')
-    addRichText(Groups.Credits:AddLabel('<font color="#ff00ff">Bart3kk</font> - mobile port'), function()
+    Groups.Credits:AddButton('copy link to official repo', function()
         if pcall(setclipboard, "https://github.com/Bart3kk/funky-friday/autoplay") then
             UI:Notify("Copied Bart3kk's GitHub link to clipboard!", 5)
         end
