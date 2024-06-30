@@ -102,7 +102,7 @@ local ScriptRepo = 'https://raw.githubusercontent.com/Bart3kk/funky-friday-autop
 local UI = nil
 
 if IsMobile then
-    UI = loadstring(game:HttpGet(UIrepo .. 'MobileLibrary.lua'))
+    UI = loadstring(game:HttpGet(UIRepo .. 'MobileLibrary.lua'))
 else
     UI = loadstring(game:HttpGet(UIRepo .. 'Library.lua'))()
 
