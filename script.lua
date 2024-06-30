@@ -1,8 +1,12 @@
 print("Credits to mstudio45 for the ported UI lib of Linoria")
 print("Credits to Wally-RBLX and his devs for making this amazing script")
 print("I DO NOT OWN ANY OF THIS CODE. CREDITS TO THIS CODE AND UI LIBS ETC GO TO THEIR OWNERS.")
-print(" ")
-print("Wally RBLX's Funky Friday AutoPlay script mobile port. (READ LINES ABOVE!)")
+
+local virtualInputManager = game:GetService('VirtualInputManager')
+
+virtualInputManager:SendKeyEvent(true, Enum.KeyCode.F9, false, game)
+task.wait(0.1)
+virtualInputManager:SendKeyEvent(false, Enum.KeyCode.F9, false, game)
 
 local start = tick()
 local client = game:GetService('Players').LocalPlayer;
@@ -392,7 +396,6 @@ end
 
 local runService = game:GetService('RunService')
 local userInputService = game:GetService('UserInputService')
-local virtualInputManager = game:GetService('VirtualInputManager')
 
 local random = Random.new()
 
@@ -981,10 +984,14 @@ Groups.Credits = Tabs.Miscellaneous:AddRightGroupbox('Credits')
     end
 
     addRichText(Groups.Credits:AddLabel('<font color="#3da5ff">wally</font> - script'))
-    addRichText(Groups.Credits:AddLabel('<font color="#ff0000">Bart3kk</font> - mobile port'))
     addRichText(Groups.Credits:AddLabel('<font color="#de6cff">Sezei</font> - contributor'))
     Groups.Credits:AddLabel('Inori - ui library')
     Groups.Credits:AddLabel('Jan - old ui library')
+    addRichText(Groups.Credits:AddLabel('<font color="#ff00ff">Bart3kk</font> - mobile port'), function()
+        if pcall(setclipboard, "https://github.com/Bart3kk/funky-friday/autoplay") then
+            UI:Notify("Copied Bart3kk's GitHub link to clipboard!", 5)
+        end
+    end)
 
 
 Groups.Misc = Tabs.Miscellaneous:AddRightGroupbox('Miscellaneous')
