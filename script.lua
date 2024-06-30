@@ -813,5 +813,32 @@ else
 end
 
 -- Themes
-loadstring(game:HttpGet(UIRepo .. 'ThemeManager.lua'))
+do
+	local latestThemeIndex = 0
+	for i, theme in next, themeManager.BuiltInThemes do
+		if theme[1] > latestThemeIndex then
+			latestThemeIndex = theme[1]
+		end
+	end
+
+	latestThemeIndex = latestThemeIndex + 1
+
+	local linoriaTheme = themeManager.BuiltInThemes.Default[2]
+	local funkyFridayTheme = table.clone(themeManager.BuiltInThemes.Default[2])
+
+	funkyFridayTheme.AccentColor = Color3.fromRGB(255, 65, 65):ToHex()
+
+	themeManager.BuiltInThemes['Linoria'] = { latestThemeIndex, linoriaTheme }
+	themeManager.BuiltInThemes['Default'] = { 1, funkyFridayTheme }
+
+	themeManager:SetLibrary(UI)
+	themeManager:SetFolder('funky_friday_autoplayer')
+	themeManager:ApplyToGroupbox(Tabs.Miscellaneous:AddLeftGroupbox('Themes'))
+
+	SaveManager:SetIgnoreIndexes({ 
+		"BackgroundColor", "MainColor", "AccentColor", "OutlineColor", "FontColor", -- themes
+		"ThemeManager_ThemeList", 'ThemeManager_CustomThemeList', 'ThemeManager_CustomThemeName', -- themes
+	})
+end
+
 UI:Notify(string.format('Loaded script in %.4f second(s)!', tick() - start), 3)
