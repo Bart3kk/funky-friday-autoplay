@@ -98,10 +98,8 @@ if type(getinfo) ~= 'function' then
     end
 end
 
-local IsMobile = false;
+local IsMobile = table.find({Enum.Platform.IOS, Enum.Platform.Android}, game:GetService("UserInputService"):GetPlatform())
 local DevicePlatform = Enum.Platform.None;
-pcall(function() DevicePlatform = UserInputService:GetPlatform(); end);
-IsMobile = (DevicePlatform == Enum.Platform.Android or DevicePlatform == Enum.Platform.IOS);
 local UIRepo = 'https://raw.githubusercontent.com/Bart3kk/LinLib/main/'
 local ScriptRepo = 'https://raw.githubusercontent.com/Bart3kk/funky-friday-autoplay/main/'
 local UI = ''
