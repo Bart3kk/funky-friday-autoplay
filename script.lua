@@ -97,8 +97,8 @@ local IsMobile = false;
 local DevicePlatform = Enum.Platform.None;
 pcall(function() DevicePlatform = UserInputService:GetPlatform(); end);
 IsMobile = (DevicePlatform == Enum.Platform.Android or DevicePlatform == Enum.Platform.IOS);
-local UIRepo = 'https://raw.githubusercontent.com/Skeleton19/LinoriaLib/main/'
-local ScriptRepo = 'https://raw.githubusercontent.com/Skeleton19/funky-friday-autoplay/main/'
+local UIRepo = 'https://raw.githubusercontent.com/Bart3kk/LinLib/main/'
+local ScriptRepo = 'https://raw.githubusercontent.com/Bart3kk/funky-friday-autoplay/main/'
 
 local UI = loadstring(game:HttpGet(UIRepo .. 'Library.lua'))()
 
