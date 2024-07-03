@@ -1,8 +1,4 @@
-print("Credits to mstudio45 for the ported UI lib of Linoria")
-print("Credits to Wally-RBLX and his devs for making this amazing script")
-print("I DO NOT OWN ANY OF THIS CODE. CREDITS TO THIS CODE AND UI LIBS ETC GO TO THEIR OWNERS.")
-print("Also this comes preloaded with a legit config")
-
+print("Credits to mstudio45 for the ported UI lib of Linoria\nCredits to Wally-RBLX and his devs for making this amazing script\nI DO NOT OWN ANY OF THIS CODE. CREDITS TO THIS CODE AND UI LIBS ETC GO TO THEIR OWNERS.\n \nWally RBLX's Funky Friday AutoPlay script mobile port. (READ LINES ABOVE!)")
 local virtualInputManager = game:GetService('VirtualInputManager')
 
 virtualInputManager:SendKeyEvent(true, Enum.KeyCode.F9, false, game)
@@ -16,40 +12,10 @@ local executor = identifyexecutor and identifyexecutor() or 'Unknown'
 
 local function fail(r) return client:Kick(r) end
 
--- gracefully handle errors when loading external scripts
--- added a cache to make hot reloading a bit faster
 local usedCache = shared.__urlcache and next(shared.__urlcache) ~= nil
 
 shared.__urlcache = shared.__urlcache or {}
-local function urlLoad(url)
-    local success, result
 
-    if shared.__urlcache[url] then
-        success, result = true, shared.__urlcache[url]
-    else
-        success, result = pcall(game.HttpGet, game, url)
-    end
-
-    if (not success) then
-        return fail(string.format('Failed to GET url %q for reason: %q', url, tostring(result)))
-    end
-
-    local fn, err = loadstring(result)
-    if (type(fn) ~= 'function') then
-        return fail(string.format('Failed to loadstring url %q for reason: %q', url, tostring(err)))
-    end
-
-    local results = { pcall(fn) }
-    if (not results[1]) then
-        return fail(string.format('Failed to initialize url %q for reason: %q', url, tostring(results[2])))
-    end
-
-    shared.__urlcache[url] = result
-    return unpack(results, 2)
-end
-
--- attempt to block imcompatible exploits
--- rewrote because old checks literally did not work
 if type(set_identity) ~= 'function' then return fail('Unsupported exploit (missing "set_thread_identity")') end
 if type(getconnections) ~= 'function' then return fail('Unsupported exploit (missing "getconnections")') end
 if type(getloadedmodules) ~= 'function' then return fail('Unsupported exploit (misssing "getloadedmodules")') end
@@ -64,11 +30,9 @@ if type(setupvalue) ~= 'function' then return fail('Unsupported exploit (misssin
 if type(getupvalue) ~= 'function' then return fail('Unsupported exploit (misssing "debug.getupvalue")') end
 if type(getupvalues) ~= 'function' then return fail('Unsupported exploit (missing "debug.getupvalues")') end
 
--- free exploit bandaid fix
 if type(getinfo) ~= 'function' then
     local debug_info = debug.info;
     if type(debug_info) ~= 'function' then
-        -- if your exploit doesnt have getrenv you have no hope
         if type(getrenv) ~= 'function' then return fail('Unsupported exploit (missing "getrenv")') end
         debug_info = getrenv().debug.info
     end
@@ -83,7 +47,6 @@ if type(getinfo) ~= 'function' then
         for k in next, upvalues do
             nups = nups + 1
         end
-        -- winning code
         return {
             source      = '@' .. results[1],
             short_src   = results[1],
@@ -92,28 +55,30 @@ if type(getinfo) ~= 'function' then
             name        = results[3],
             func        = results[4],
             numparams   = results[5],
-            is_vararg   = results[6], -- 'a' argument returns 2 values :)
+            is_vararg   = results[6],
             nups        = nups,     
         }
     end
 end
 
-local IsMobile = table.find({Enum.Platform.IOS, Enum.Platform.Android}, game:GetService("UserInputService"):GetPlatform())
+local IsMobile = false;
 local DevicePlatform = Enum.Platform.None;
+pcall(function() DevicePlatform = UserInputService:GetPlatform(); end);
+IsMobile = (DevicePlatform == Enum.Platform.Android or DevicePlatform == Enum.Platform.IOS);
 local UIRepo = 'https://raw.githubusercontent.com/Bart3kk/LinLib/main/'
 local ScriptRepo = 'https://raw.githubusercontent.com/Bart3kk/funky-friday-autoplay/main/'
-local UI = ''
 
+local UI = nil
 if IsMobile then
-    UI = loadstring(game:HttpGet(UIRepo .. 'MobileLibrary.lua'))
+    UI = loadstring(game:HttpGet(UIRepo .. 'TestMobileSupport.lua'))()
 else
     UI = loadstring(game:HttpGet(UIRepo .. 'Library.lua'))()
+end
 
 local metadata = loadstring(game:HttpGet(ScriptRepo .. 'metadata.lua'))()
 local httpService = game:GetService('HttpService')
 local ThemeManager = {} do
 	ThemeManager.Folder = 'LinoriaLibSettings'
-	-- if not isfolder(ThemeManager.Folder) then makefolder(ThemeManager.Folder) end
 
 	ThemeManager.Library = UI
 	ThemeManager.BuiltInThemes = {
@@ -133,8 +98,6 @@ local ThemeManager = {} do
 
 		if not data then return end
 
-		-- custom themes are just regular dictionaries instead of an array with { index, dictionary }
-
 		local scheme = data[2]
 		for idx, col in next, customThemeData or scheme do
 			self.Library[idx] = Color3.fromHex(col)
@@ -148,7 +111,6 @@ local ThemeManager = {} do
 	end
 
 	function ThemeManager:ThemeUpdate()
-		-- This allows us to force apply themes without loading the themes tab :)
 		local options = { "FontColor", "MainColor", "AccentColor", "BackgroundColor", "OutlineColor" }
 		for i, field in next, options do
 			if Options and Options[field] then
@@ -290,8 +252,6 @@ local ThemeManager = {} do
 		for i = 1, #list do
 			local file = list[i]
 			if file:sub(-5) == '.json' then
-				-- i hate this but it has to be done ...
-
 				local pos = file:find('.json', 1, true)
 				local char = file:sub(pos, pos)
 
@@ -315,10 +275,6 @@ local ThemeManager = {} do
 
 	function ThemeManager:BuildFolderTree()
 		local paths = {}
-
-		-- build the entire tree if a path is like some-hub/phantom-forces
-		-- makefolder builds the entire tree on Synapse X but not other exploits
-
 		local parts = self.Folder:split('/')
 		for idx = 1, #parts do
 			paths[#paths + 1] = table.concat(parts, '/', 1, idx)
@@ -401,14 +357,8 @@ local random = Random.new()
 local task = task or getrenv().task;
 local fastWait, fastSpawn = task.wait, task.spawn;
 
--- firesignal implementation
--- hitchance rolling
 local fireSignal, rollChance do
-    -- updated for script-ware or whatever
-    -- attempted to update for krnl
-
     function fireSignal(target, signal, ...)
-        -- getconnections with InputBegan / InputEnded does not work without setting Synapse to the game's context level
         set_identity(2)
         local didFire = false
         for _, signal in next, getconnections(signal) do
@@ -420,22 +370,17 @@ local fireSignal, rollChance do
                 end
             end
         end
-        -- if not didFire then fail"couldnt fire input signal" end
         set_identity(7)
     end
 
-    -- uses a weighted random system
-    -- its a bit scuffed rn but it works good enough
-
     function rollChance()
-        -- if (//library.flags.autoPlayerMode == 'Manual') then
         if Options.AutoplayerMode.Value == 'Manual' then
             if (Options.SickBind:GetState()) then return 'Sick' end
             if (Options.GoodBind:GetState()) then return 'Good' end
             if (Options.OkayBind:GetState()) then return 'Ok' end
             if (Options.BadBind:GetState()) then return 'Bad' end
 
-            return 'Bad' -- incase if it cant find one
+            return 'Bad'
         end
 
         local chances = {
@@ -474,7 +419,6 @@ local fireSignal, rollChance do
     end
 end
 
--- autoplayer
 local chanceValues do
     chanceValues = { 
         Sick = 96,
@@ -523,7 +467,6 @@ local chanceValues do
 
     local rng = Random.new()
     runService:BindToRenderStep(shared._id, 1, function()
-        --if (not library.flags.autoPlayer) then return end
         
         if (not Toggles.Autoplayer) or (not Toggles.Autoplayer.Value) then 
             return 
@@ -541,7 +484,6 @@ local chanceValues do
 
         local arrowData = framework.ArrowData[mode].Arrows
         for i, arrow in next, arrows do
-            -- todo: switch to this (https://i.imgur.com/pEVe6Tx.png)
             local ignoredNoteTypes = { Death = true, Mechanic = true, Poison = true }
 
             if type(arrow.NoteDataConfigs) == 'table' then 
@@ -614,13 +556,8 @@ local chanceValues do
 end
 
 local ActivateUnlockables do
-    -- Note: I know you can do this with UserId but it only works if you run it before opening the notes menu
-    -- My script should work no matter the order of which you run things :)
-
     local loadStyle = nil
     local function loadStyleProxy(...)
-        -- This forces the styles to reload every time
-            
         local upvalues = getupvalues(loadStyle)
         for i, upvalue in next, upvalues do
             if type(upvalue) == 'table' and rawget(upvalue, 'Style') then
@@ -637,17 +574,14 @@ local ActivateUnlockables do
         for i = 1, #gc do
             local obj = gc[i]
             if type(obj) == 'function' then
-                -- goodbye nups numeric loop because script-ware is weird
                 local upvalues = getupvalues(obj)
                 for i, upv in next, upvalues do
                     if type(upv) == 'function' and getinfo(upv).name == 'LoadStyle' then
-                        -- ugly but it works, we don't know every name for is_synapse_function and similar
                         local function isGameFunction(fn)
                             return getinfo(fn).source:match('%.ArrowSelector%.Customize$')
                         end
 
                         if isGameFunction(obj) and isGameFunction(upv) then
-                            -- avoid non-game functions :)
                             loadStyle = loadStyle or upv
                             setupvalue(obj, i, loadStyleProxy)
 
@@ -675,7 +609,6 @@ local ActivateUnlockables do
     end
 end
 
--- UpdateScore hook
 do
     while type(roundManager) ~= 'table' do
         task.wait()
@@ -688,7 +621,6 @@ do
         local score = args[2]
 
         if type(score) == 'number' and Options.ScoreModifier then
-        --    table.foreach(args, warn)
             if Options.ScoreModifier.Value == 'No decrease on miss' then
                 args[2] = 0
             elseif Options.ScoreModifier.Value == 'Increase score on miss' then
@@ -704,7 +636,6 @@ do
     end)
 end
 
--- Auto ring collector
 do
     local thread = task.spawn(function()
         local map = workspace:waitForChild('Map', 5)
@@ -850,8 +781,6 @@ local SaveManager = {} do
         for i = 1, #list do
             local file = list[i]
             if file:sub(-5) == '.json' then
-                -- i hate this but it has to be done ...
-
                 local pos = file:find('.json', 1, true)
                 local start = pos
 
@@ -929,7 +858,7 @@ Groups.Autoplayer = Tabs.Main:AddLeftGroupbox('Autoplayer')
         Compact = true, 
         Default = 'firesignal', 
         Values = { 'firesignal', 'virtual input' }, 
-        Tooltip = 'Input method used to press arrows.\n* firesignal: calls input functions directly.\n* virtual input: emulates key presses. use if "firesignal" does not work. (USE ON WAVE)', 
+        Tooltip = 'Input method used to press arrows.\n* firesignal: calls input functions directly.\n* virtual input: emulates key presses. use if "firesignal" does not work.', 
     })
 
 Groups.HitChances = Tabs.Main:AddLeftGroupbox('Hit chances')
@@ -941,8 +870,8 @@ Groups.HitChances = Tabs.Main:AddLeftGroupbox('Hit chances')
         Tooltip = 'Mode to use for deciding when to hit notes.\n* Automatic: hits notes based on chance sliders\n* Manual: hits notes based on held keybinds',
     })
 
-    Groups.HitChances:AddSlider('SickChance',   { Text = 'Sick chance', Min = 0, Max = 100, Default = 95, Suffix = '%', Rounding = 0, Compact = true })
-    Groups.HitChances:AddSlider('GoodChance',   { Text = 'Good chance', Min = 0, Max = 100, Default = 5, Suffix = '%', Rounding = 0, Compact = true })
+    Groups.HitChances:AddSlider('SickChance',   { Text = 'Sick chance', Min = 0, Max = 100, Default = 100, Suffix = '%', Rounding = 0, Compact = true })
+    Groups.HitChances:AddSlider('GoodChance',   { Text = 'Good chance', Min = 0, Max = 100, Default = 0, Suffix = '%', Rounding = 0, Compact = true })
     Groups.HitChances:AddSlider('OkChance',     { Text = 'Ok chance',   Min = 0, Max = 100, Default = 0, Suffix = '%', Rounding = 0, Compact = true })
     Groups.HitChances:AddSlider('BadChance',    { Text = 'Bad chance',  Min = 0, Max = 100, Default = 0, Suffix = '%', Rounding = 0, Compact = true })
     Groups.HitChances:AddSlider('MissChance',   { Text = 'Miss chance', Min = 0, Max = 100, Default = 0, Suffix = '%', Rounding = 0, Compact = true })
@@ -950,7 +879,7 @@ Groups.HitChances = Tabs.Main:AddLeftGroupbox('Hit chances')
 Groups.HitTiming = Tabs.Main:AddLeftGroupbox('Hit timing')
     Groups.HitTiming:AddDropdown('DelayMode', { 
         Text = 'Delay mode', 
-        Default = 2, 
+        Default = 1, 
         Values = { 'Manual', 'Random' },
         Tooltip = 'Adjustable timing for when to release notes.\n* Manual releases the note after a fixed amount of time.\n* Random releases the note after a random amount of time.', 
     })
@@ -960,11 +889,11 @@ Groups.HitTiming = Tabs.Main:AddLeftGroupbox('Hit timing')
     Groups.HitTiming:AddSlider('HeldDelay',      { Text = 'Held note delay', Min = -20, Max = 100, Default = 0, Rounding = 0, Compact = true, Suffix = 'ms' })
         
     Groups.HitTiming:AddLabel('Random delay')
-    Groups.HitTiming:AddSlider('NoteDelayMin',   { Text = 'Min note delay', Min = 0, Max = 100, Default = 40,    Rounding = 0, Compact = true, Suffix = 'ms' })
-    Groups.HitTiming:AddSlider('NoteDelayMax',   { Text = 'Max note delay', Min = 0, Max = 500, Default = 60,   Rounding = 0, Compact = true, Suffix = 'ms' })
+    Groups.HitTiming:AddSlider('NoteDelayMin',   { Text = 'Min note delay', Min = 0, Max = 100, Default = 0,    Rounding = 0, Compact = true, Suffix = 'ms' })
+    Groups.HitTiming:AddSlider('NoteDelayMax',   { Text = 'Max note delay', Min = 0, Max = 500, Default = 20,   Rounding = 0, Compact = true, Suffix = 'ms' })
     
-    Groups.HitTiming:AddSlider('HeldDelayMin',   { Text = 'Min held note delay', Min = 0, Max = 100, Default = 20,   Rounding = 0, Compact = true, Suffix = 'ms' })
-    Groups.HitTiming:AddSlider('HeldDelayMax',   { Text = 'Max held note delay', Min = 0, Max = 500, Default = 65,  Rounding = 0, Compact = true, Suffix = 'ms' })
+    Groups.HitTiming:AddSlider('HeldDelayMin',   { Text = 'Min held note delay', Min = 0, Max = 100, Default = 0,   Rounding = 0, Compact = true, Suffix = 'ms' })
+    Groups.HitTiming:AddSlider('HeldDelayMax',   { Text = 'Max held note delay', Min = 0, Max = 500, Default = 20,  Rounding = 0, Compact = true, Suffix = 'ms' })
 
 Groups.Misc = Tabs.Main:AddRightGroupbox('Misc')
     Groups.Misc:AddButton('Unlock developer notes', ActivateUnlockables)
@@ -983,15 +912,9 @@ Groups.Credits = Tabs.Miscellaneous:AddRightGroupbox('Credits')
     end
 
     addRichText(Groups.Credits:AddLabel('<font color="#3da5ff">wally</font> - script'))
-    addRichText(Groups.Credits:AddLabel('<font color="#ff00ff">Bart3kk</font> - mobile port'))
     addRichText(Groups.Credits:AddLabel('<font color="#de6cff">Sezei</font> - contributor'))
     Groups.Credits:AddLabel('Inori - ui library')
     Groups.Credits:AddLabel('Jan - old ui library')
-    Groups.Credits:AddButton('copy link to official repo', function()
-        if pcall(setclipboard, "https://github.com/Bart3kk/funky-friday/autoplay") then
-            UI:Notify("Copied Bart3kk's GitHub link to clipboard!", 5)
-        end
-    end)
 
 
 Groups.Misc = Tabs.Miscellaneous:AddRightGroupbox('Miscellaneous')
@@ -1064,37 +987,34 @@ if type(readfile) == 'function' and type(writefile) == 'function' and type(makef
     task.defer(SaveManager.Check)
 else
     Groups.Configs:AddLabel('Your exploit is missing file functions so you are unable to use configs.', true)
-    --UI:Notify('Failed to create configs tab due to your exploit missing certain file functions.', 2)
 end
 
--- Themes
 do
-    local BuiltInThemes = {
-		['Default'] 		= { 1, httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"1c1c1c","AccentColor":"0055ff","BackgroundColor":"141414","OutlineColor":"323232"}') },
-		['BBot'] 			= { 2, httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"1e1e1e","AccentColor":"7e48a3","BackgroundColor":"232323","OutlineColor":"141414"}') },
-		['Fatality']		= { 3, httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"1e1842","AccentColor":"c50754","BackgroundColor":"191335","OutlineColor":"3c355d"}') },
-		['Jester'] 			= { 4, httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"242424","AccentColor":"db4467","BackgroundColor":"1c1c1c","OutlineColor":"373737"}') },
-		['Mint'] 			= { 5, httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"242424","AccentColor":"3db488","BackgroundColor":"1c1c1c","OutlineColor":"373737"}') },
-		['Tokyo Night'] 	= { 6, httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"191925","AccentColor":"6759b3","BackgroundColor":"16161f","OutlineColor":"323232"}') },
-		['Ubuntu'] 			= { 7, httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"3e3e3e","AccentColor":"e2581e","BackgroundColor":"323232","OutlineColor":"191919"}') },
-		['Quartz'] 			= { 8, httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"232330","AccentColor":"426e87","BackgroundColor":"1d1b26","OutlineColor":"27232f"}') },
-	}
+    local latestThemeIndex = 0
+    for i, theme in next, ThemeManager.BuiltInThemes do
+        if theme[1] > latestThemeIndex then
+            latestThemeIndex = theme[1]
+        end
+    end
 
-	local latestThemeIndex = 0
-	for i, theme in next, BuiltInThemes do
-		if theme[1] > latestThemeIndex then
-			latestThemeIndex = theme[1]
-		end
-	end
+    latestThemeIndex = latestThemeIndex + 1
 
-	latestThemeIndex = latestThemeIndex + 1
+    local linoriaTheme = ThemeManager.BuiltInThemes.Default[2]
+    local funkyFridayTheme = table.clone(ThemeManager.BuiltInThemes.Default[2])
 
-	ThemeManager:ApplyToGroupbox(Tabs.Miscellaneous:AddLeftGroupbox('Themes'))
+    funkyFridayTheme.AccentColor = Color3.fromRGB(255, 65, 65):ToHex()
 
-	SaveManager:SetIgnoreIndexes({ 
-		"BackgroundColor", "MainColor", "AccentColor", "OutlineColor", "FontColor", -- themes
-		"ThemeManager_ThemeList", 'ThemeManager_CustomThemeList', 'ThemeManager_CustomThemeName', -- themes
-	})
+    ThemeManager.BuiltInThemes['Linoria'] = { latestThemeIndex, linoriaTheme }
+    ThemeManager.BuiltInThemes['Default'] = { 1, funkyFridayTheme }
+
+    ThemeManager:SetLibrary(UI)
+    ThemeManager:SetFolder('funky_friday_autoplayer')
+    ThemeManager:ApplyToGroupbox(Tabs.Miscellaneous:AddLeftGroupbox('Themes'))
+
+    SaveManager:SetIgnoreIndexes({ 
+        "BackgroundColor", "MainColor", "AccentColor", "OutlineColor", "FontColor",
+        "ThemeManager_ThemeList", 'ThemeManager_CustomThemeList', 'ThemeManager_CustomThemeName',
+    })
 end
 
-UI:Notify(string.format('Loaded script in %.4f second(s)!', tick() - start), 3) end --idfk why its needed but it is i guess
+UI:Notify(string.format('Loaded script in %.4f second(s)!', tick() - start), 3)
