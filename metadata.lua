@@ -1,5 +1,5 @@
 return {
-	version = '2.3b v6.9',
-	updated = '6/30/24',
-	message = 'fixed the script and themes'
+	version = '2.420b',
+	updated = '7/3/24',
+	message = 'fixed firesignal on some executors'
 }
