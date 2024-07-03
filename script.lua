@@ -911,11 +911,22 @@ Groups.Credits = Tabs.Miscellaneous:AddRightGroupbox('Credits')
         label.TextLabel.RichText = true
     end
 
-    addRichText(Groups.Credits:AddLabel('<font color="#3da5ff">wally</font> - script'))
+    addRichText(Groups.Credits:AddLabel('<font color="#3da5ff">wally</font> - main script'))
+    addRichText(Groups.Credits:AddLabel('<font color="#ff00ff">v3r_</font> - mobile ui'))
+    addRichText(Groups.Credits:AddLabel('<font color="#ff00ff">Bart3kk</font> - og mobile ui (+fixes)'))
     addRichText(Groups.Credits:AddLabel('<font color="#de6cff">Sezei</font> - contributor'))
     Groups.Credits:AddLabel('Inori - ui library')
     Groups.Credits:AddLabel('Jan - old ui library')
-
+    Groups.Credits:AddButton("copy link to v3r_'s repo", function()
+        if pcall(setclipboard, "https://github.com/ltseverydayyou/uuuuuuu/tree/main/Funky%20Friday") then
+            UI:Notify("Copied v3r_'s GitHub link to clipboard!", 5)
+        end
+    end)
+    Groups.Credits:AddButton('copy link to official port', function()
+        if pcall(setclipboard, "https://github.com/Bart3kk/funky-friday-autoplay") then
+            UI:Notify("Copied Bart3kk's GitHub link to clipboard!", 5)
+        end
+    end)
 
 Groups.Misc = Tabs.Miscellaneous:AddRightGroupbox('Miscellaneous')
     Groups.Misc:AddLabel(metadata.message or 'no message found!', true)
