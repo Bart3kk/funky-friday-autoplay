@@ -1,3 +1,8 @@
+LOADSTRING:
+```lua
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Bart3kk/funky-friday-autoplay/main/script.lua'))()
+```
+
 Basically the up to date version of my Funky Friday autoplayer script. I've made it a loadstring, cuz of update purposes (I don't want to spam new script when I fix a simple issue)
 
 Supports:
