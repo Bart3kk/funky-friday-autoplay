@@ -6,7 +6,7 @@ loadstring(game:HttpGet('https://raw.githubusercontent.com/Bart3kk/funky-friday-
 Basically the up to date version of Funky Friday autoplayer script. I've made it a loadstring, cuz of update purposes (I don't want to spam new script when I fix a simple issue)
 
 Supports:
-- Atlantis (WIP, finally a good free exec for y'all 🙏)
+- Velocity / Sonar (finally a good free exec for y'all 🙏)
 - Wave
 - Arceus X
 - Codex
