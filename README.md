@@ -1,10 +1,5 @@
 # NOTICE:
-## This script has been DISCONTINUED.
-
-LOADSTRING:
-```lua
-loadstring(game:HttpGet('https://raw.githubusercontent.com/Bart3kk/funky-friday-autoplay/main/script.lua'))()
-```
+## This script has been DISCONTINUED. I am no longer affiliated with the Roblox exploiting community.
 
 Basically the up to date version of Funky Friday autoplayer script. I've made it a loadstring, cuz of update purposes (I don't want to spam new script when I fix a simple issue)
 
