@@ -1,3 +1,6 @@
+# NOTICE:
+## This script has been DISCONTINUED.
+
 LOADSTRING:
 ```lua
 loadstring(game:HttpGet('https://raw.githubusercontent.com/Bart3kk/funky-friday-autoplay/main/script.lua'))()
